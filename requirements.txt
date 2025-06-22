@@ -1,0 +1,6 @@
+pyaudio
+SpeechRecognition
+geocoder
+twilio
+Flask
+python-dotenv

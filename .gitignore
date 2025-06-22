@@ -1,0 +1,18 @@
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Stored audio files
+audio_clips/
+evidence/
+
+# macOS specific files
+.DS_Store
+
+*.log
+dist/
+build/
+*.spec
