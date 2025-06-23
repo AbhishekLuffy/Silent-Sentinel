@@ -7,6 +7,7 @@ from sms_alert import send_sms_alert
 from email_alert import send_email_alert
 from audio_evidence import record_evidence_audio
 from location_utils import get_location_link
+from app import make_call
 
 # Constants
 CHUNK = 1024
@@ -82,6 +83,7 @@ def record_audio():
                 location_link = get_location_link()
                 send_sms_alert(location_link)
                 send_email_alert(location_link)
+                make_call()  # Make the emergency phone call
                 record_evidence_audio()
             else:
                 print("❌ No phrase detected.")

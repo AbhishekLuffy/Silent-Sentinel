@@ -9,6 +9,9 @@ __pycache__/
 audio_clips/
 evidence/
 
+# Database
+evidence.db
+
 # macOS specific files
 .DS_Store
 

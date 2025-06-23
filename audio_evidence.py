@@ -9,7 +9,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-EVIDENCE_SECONDS = 10
+EVIDENCE_SECONDS = 600  # 10 minutes
 EVIDENCE_DIR = "evidence"
 
 def _record_and_save():

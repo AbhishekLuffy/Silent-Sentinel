@@ -1,103 +1,88 @@
-# Silent Sentinel - Setup Guide
+# Silent Sentinel - Emergency Alert System
 
-Welcome to Silent Sentinel! This guide will walk you through the necessary steps to set up and run the project on your local machine after cloning the repository.
+## Overview
+Silent Sentinel is a modern, cross-platform emergency alert and evidence collection system. It features a professional dark-themed desktop GUI, real-time audio monitoring, multi-channel alerting (SMS, email, phone call), evidence logging, and a robust admin management system. The app is designed for both usability and security, with a focus on real-world emergency response scenarios.
 
-## 1. Prerequisites
+---
 
-Before you begin, ensure you have the following software installed on your system:
+## Key Features
 
-*   **Python 3**: The core programming language for the project. You can download it from [python.org](https://www.python.org/downloads/).
-*   **Git**: The version control system used to clone the repository. You can download it from [git-scm.com](https://git-scm.com/downloads).
-*   **(macOS Only) Homebrew**: A package manager for macOS, required to install a specific audio dependency. You can install it from [brew.sh](https://brew.sh/).
+### 1. **Modern GUI (ttkbootstrap, Dark Theme)**
+- Clean, professional dark UI using the `superhero` theme.
+- Responsive layout, clear fonts, and intuitive navigation.
+- Card-like sections and accent colors for a real developer-grade look.
 
-## 2. Cloning the Repository
+### 2. **Audio Monitoring & Secret Phrase Detection**
+- Continuously listens for a user-defined secret phrase (e.g., "help me lotus").
+- When detected, triggers a 10-second cancel window before sending alerts.
+- Records 10 minutes of evidence audio after an event.
 
-First, clone the project from GitHub to your local machine using the following command in your terminal:
+### 3. **Multi-Channel Emergency Alerts**
+- **SMS Alert:** Sends a Twilio SMS to a configured phone number.
+- **Email Alert:** Sends a detailed email to a configured address.
+- **Phone Call:** Initiates a Twilio call with a custom voice message (using Flask + TwiML).
+- All credentials are securely loaded from a `.env` file.
 
-```bash
-git clone https://github.com/AbhishekLuffy/Silent-Sentinel.git
-cd Silent-Sentinel
-```
+### 4. **Location Tracking**
+- **IP-based location** (default) for quick, approximate location.
+- **Precise device location:**
+  - "Get Precise Location" button opens a browser page.
+  - Uses browser geolocation (with user permission) to fetch exact coordinates.
+  - Updates the app and Google Maps link with the precise location.
 
-## 3. Environment Setup and Dependencies
+### 5. **Evidence Database**
+- All audio evidence is logged in a local SQLite database (`evidence.db`).
+- Each entry includes: filename, timestamp, location URL, and transcription.
+- Database is viewable in-app (after admin login) with a modern, scrollable, striped table.
+- Download and delete evidence directly from the app.
 
-This project has several dependencies, including ones for handling audio, sending alerts, and managing environment variables.
+### 6. **Admin System**
+- **Registration:** New admins must register and await approval.
+- **Main Admin:**
+  - Hardcoded credentials: Username `Abhishek P`, Password `Abhi@2004`.
+  - Can view, accept, or delete pending admin registrations.
+- **Only approved admins** can log in and view the evidence database.
+- Secure password hashing and robust user management.
 
-### Step 3.1: Install PortAudio (macOS Only)
+### 7. **In-App Navigation**
+- Tabs for Home, Admin, Main Admin, and Database (after login).
+- All admin and evidence management is handled within the GUI.
 
-`PyAudio` has a system dependency called `PortAudio`. If you are on macOS, you must install it first using Homebrew:
+### 8. **Robust Error Handling & UX**
+- All dialogs and notifications use modern, styled message boxes.
+- Scrollbars, padding, and striped rows for easy evidence review.
+- All actions are confirmed and user-friendly.
 
-```bash
-brew install portaudio
-```
-*(For Windows/Linux, `pip` will often handle this, but you may need to consult `PyAudio`'s documentation for your specific distribution if you encounter issues.)*
+---
 
-### Step 3.2: Create a Virtual Environment (Recommended)
+## How to Use
 
-It's highly recommended to use a virtual environment to keep the project's dependencies isolated from your system's global Python packages.
+1. **Install dependencies:**
+   - `pip install -r requirements.txt`
+   - `pip install ttkbootstrap pillow`
+2. **Configure your `.env` file** with Twilio and email credentials.
+3. **Run the app:**
+   - `python gui_app.py`
+4. **Register as admin** (pending approval by main admin).
+5. **Main admin** logs in, approves admins.
+6. **Monitor for secret phrase, trigger alerts, and manage evidence.**
+7. **Get precise location** using the browser button for device-level accuracy.
 
-```bash
-# Create a virtual environment named 'venv'
-python3 -m venv venv
+---
 
-# Activate the virtual environment
-# On macOS/Linux:
-source venv/bin/activate
-# On Windows:
-.\\venv\\Scripts\\activate
-```
+## Recent Major Updates (Today)
+- Switched to a professional dark theme with ttkbootstrap.
+- Added a modern, scrollable, striped evidence database table with download/delete.
+- Implemented a robust admin system with main admin approval.
+- Added browser-based precise location fetching.
+- Improved all dialogs, error handling, and user experience.
+- Cleaned up and modernized all UI elements for a real developer-grade look.
 
-### Step 3.3: Install Python Packages
+---
 
-With your virtual environment activated, install all the necessary Python packages listed in `requirements.txt`:
+## Credits
+Developed by Abhishek P and contributors.
 
-```bash
-pip install -r requirements.txt
-```
+---
 
-## 4. Configuration (Crucial Step)
-
-The application uses external services (Twilio for SMS, Gmail for email) and requires API keys and credentials to function. These are stored in a `.env` file that you must create yourself, as it's excluded from the repository for security reasons.
-
-### Step 4.1: Create the `.env` file
-
-In the root directory of the project, create a new file named `.env`.
-
-### Step 4.2: Add Your Credentials
-
-Open the `.env` file and add the following variables, replacing the placeholder values with your actual information:
-
-```ini
-# --- Twilio Credentials for SMS Alerts ---
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=your_twilio_auth_token_here
-TWILIO_PHONE=+15017122661 # Your Twilio phone number
-TARGET_PHONE=+919876543210 # The verified number to send SMS alerts to
-
-# --- Gmail Credentials for Email Alerts ---
-SENDER_EMAIL=your.email@gmail.com
-SENDER_PASSWORD=your_google_app_password_here # IMPORTANT: Use an App Password
-RECIPIENT_EMAIL=recipient.email@example.com # The email address to send alerts to
-```
-
-### **How to get the credentials:**
-
-*   **Twilio (`TWILIO_*`)**:
-    1.  Log in to your [Twilio Console](https://www.twilio.com/console).
-    2.  Your `Account SID` and `Auth Token` are on the main dashboard.
-    3.  `TWILIO_PHONE` is the phone number you purchased or were assigned by Twilio.
-    4.  `TARGET_PHONE` must be a number you have verified in your Twilio account.
-
-*   **Gmail (`SENDER_*`)**:
-    1.  `SENDER_EMAIL` is the Gmail address you want to send alerts from.
-    2.  **IMPORTANT**: You cannot use your regular Gmail password. You must generate a 16-character **App Password**. Follow the instructions on Google's support page: [Sign in with App Passwords](https://support.google.com/accounts/answer/185833).
-
-## 5. Running the Application
-
-Once all the setup and configuration steps are complete, you can launch the application with the following command:
-
-```bash
-python gui_app.py
-```
-
-This will open the Silent Sentinel desktop GUI, and you can start monitoring from there. 
+For any issues or feature requests, please open an issue on GitHub. 
