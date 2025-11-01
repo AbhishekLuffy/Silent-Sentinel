@@ -19,3 +19,4 @@ evidence.db
 dist/
 build/
 *.spec
+.env
