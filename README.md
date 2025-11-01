@@ -70,6 +70,21 @@ Silent Sentinel is a modern, cross-platform emergency alert and evidence collect
 
 ---
 
+## Web Auth (Login + Create Account in one page)
+
+A lightweight Flask server runs inside `gui_app.py` on port 5050.
+
+- Endpoints:
+  - `/auth`: Single page with both Login and Create Account forms. Uses phone (User ID) + password for login; signup collects name, email, phone, address, password.
+  - `/logout`: Logout and go back to `/auth`.
+  - `/logout`: Logout and go back to login page.
+  - `/dashboard`: Requires login; provides quick links.
+  - `/admin/users`: Lists all registered users (requires login).
+
+User data is stored in `evidence.db` table `users` (columns: name, email, phone [unique], address, password_hash, created_at), with SHA-256 password hashes.
+
+---
+
 ## Recent Major Updates (Today)
 - Switched to a professional dark theme with ttkbootstrap.
 - Added a modern, scrollable, striped evidence database table with download/delete.

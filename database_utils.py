@@ -44,6 +44,28 @@ def init_database():
             )
         ''')
 
+        # Create users table (general users who sign up via web)
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                phone TEXT,
+                address TEXT,
+                password_hash TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+        ''')
+
+        # Ensure address column exists (for upgrades)
+        try:
+            cursor.execute("SELECT address FROM users LIMIT 1")
+        except Exception:
+            cursor.execute("ALTER TABLE users ADD COLUMN address TEXT")
+        
+        # Ensure unique index on phone (login identifier)
+        cursor.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone)')
+
         conn.commit()
         print("✅ Database initialized successfully!")
     except Exception as e:
@@ -195,6 +217,68 @@ def get_all_logs():
         return logs
     except Exception as e:
         print(f"❌ Error retrieving logs: {e}")
+        return []
+    finally:
+        conn.close()
+
+# --- General Users (Web) ---
+def create_user(name, email, phone, address, password):
+    try:
+        conn = sqlite3.connect('evidence.db')
+        cursor = conn.cursor()
+        password_hash = hash_password(password)
+        created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cursor.execute('''
+            INSERT INTO users (name, email, phone, address, password_hash, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (name, email, phone, address, password_hash, created_at))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        # Email or phone already exists
+        return False
+    except Exception as e:
+        print(f"❌ Error creating user: {e}")
+        return False
+    finally:
+        conn.close()
+
+def get_user_by_phone(phone):
+    try:
+        conn = sqlite3.connect('evidence.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, name, email, phone, address, created_at FROM users WHERE phone=?', (phone,))
+        row = cursor.fetchone()
+        return row
+    except Exception as e:
+        print(f"❌ Error fetching user: {e}")
+        return None
+    finally:
+        conn.close()
+
+def verify_user(phone, password):
+    try:
+        conn = sqlite3.connect('evidence.db')
+        cursor = conn.cursor()
+        password_hash = hash_password(password)
+        cursor.execute('SELECT id FROM users WHERE phone=? AND password_hash=?', (phone, password_hash))
+        row = cursor.fetchone()
+        return row is not None
+    except Exception as e:
+        print(f"❌ Error verifying user: {e}")
+        return False
+    finally:
+        conn.close()
+
+def get_all_users():
+    try:
+        conn = sqlite3.connect('evidence.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, name, email, phone, address, created_at FROM users ORDER BY created_at DESC')
+        rows = cursor.fetchall()
+        return rows
+    except Exception as e:
+        print(f"❌ Error fetching users: {e}")
         return []
     finally:
         conn.close()

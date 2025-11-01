@@ -12,10 +12,10 @@ def send_sms_alert(location_link="Location unavailable"):
     account_sid = os.getenv("TWILIO_ACCOUNT_SID")
     auth_token = os.getenv("TWILIO_AUTH_TOKEN")
     twilio_phone = os.getenv("TWILIO_PHONE")
-    target_phone = os.getenv("TARGET_PHONE")
+    recipient_phone = os.getenv("RECIPIENT_PHONE_NUMBER")  # <-- updated variable name
 
     # Check if all required environment variables are set
-    if not all([account_sid, auth_token, twilio_phone, target_phone]):
+    if not all([account_sid, auth_token, twilio_phone, recipient_phone]):
         print("❌ Error: Twilio environment variables not set. Cannot send SMS.")
         return
 
@@ -29,7 +29,7 @@ def send_sms_alert(location_link="Location unavailable"):
         message = client.messages.create(
             body=message_body,
             from_=twilio_phone,
-            to=target_phone
+            to=recipient_phone  # <-- updated variable name
         )
         print(f"✅ SMS alert sent successfully! SID: {message.sid}")
     except Exception as e:
@@ -40,4 +40,4 @@ if __name__ == '__main__':
     print("Testing SMS alert...")
     # Example link for testing
     test_link = "https://www.google.com/maps?q=12.9716,77.5946"
-    send_sms_alert(test_link) 
+    send_sms_alert(test_link)

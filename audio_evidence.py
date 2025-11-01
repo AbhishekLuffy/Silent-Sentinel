@@ -3,6 +3,7 @@ import wave
 import os
 import datetime
 import threading
+from database_utils import insert_audio_log
 
 # Constants for audio recording
 FORMAT = pyaudio.paInt16
@@ -52,6 +53,8 @@ def _record_and_save():
             wf.writeframes(b''.join(frames))
         
         print(f"🎙️ Evidence audio recorded: {filename}")
+        # Log the evidence audio in the database
+        insert_audio_log(filename)
 
     except Exception as e:
         print(f"❌ Failed to record evidence audio: {e}")

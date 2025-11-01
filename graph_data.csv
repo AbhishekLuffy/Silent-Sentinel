@@ -1,0 +1,41 @@
+Component,Lines_of_Code,Percentage,Category
+GUI Application,1208,63.6,Frontend
+Database Utils,287,15.1,Backend
+Main Logic,101,5.3,Core
+Audio Evidence,77,4.1,Processing
+Email Alert,62,3.3,Communication
+SMS Alert,42,2.2,Communication
+App Phone,41,2.2,Communication
+Location Utils,27,1.4,Utility
+Play Audio,35,1.8,Utility
+View Logs,20,1.1,Utility
+
+Function_Category,Count,Percentage
+GUI Components,25,26.6
+Database Operations,18,19.1
+Utility Functions,16,17.0
+Authentication,15,16.0
+Alert Systems,12,12.8
+Audio Processing,8,8.5
+
+Technology_Stack,Percentage
+Frontend GUI,63.6
+Backend Logic,20.4
+Database,15.1
+External APIs,0.9
+
+Security_Feature,Count,Percentage_of_Total
+Password Hashing,1,1.1
+Session Management,3,3.2
+User Authentication,4,4.3
+Admin Management,6,6.4
+Data Validation,4,4.3
+Total Security,18,19.1
+
+File_Type,Count
+Python Files,10
+Functions,94
+Classes,1
+Import Statements,67
+Supporting Files,3
+Total Lines of Code,1900

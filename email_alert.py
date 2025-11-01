@@ -6,9 +6,9 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-def send_email_alert(location_link="Location unavailable"):
+def send_email_alert(location_link="Location unavailable", latitude=None, longitude=None):
     """
-    Sends an email alert using a Gmail account, including a location link.
+    Sends an email alert using a Gmail account, including a location link and coordinates.
     """
     sender_email = os.getenv("SENDER_EMAIL")
     password = os.getenv("SENDER_PASSWORD")
@@ -19,12 +19,25 @@ def send_email_alert(location_link="Location unavailable"):
         print("❌ Error: Email environment variables not set. Cannot send email.")
         return
 
-    # Create the email message
-    subject = "🚨 Silent Sentinel Emergency Alert"
+    # Build the emergency message
     body = (
-        f"Secret phrase was detected from Abhishek P. Please check immediately.\n\n"
-        f"Last known location: {location_link}"
+        "🚨 EMERGENCY ALERT 🚨\n\n"
+        "This is an emergency message from Silent Sentinel.\n"
+        "The secret phrase was detected. Immediate attention is required!\n\n"
     )
+    if latitude and longitude:
+        body += (
+            f"Location Coordinates:\n"
+            f"Latitude: {latitude}\n"
+            f"Longitude: {longitude}\n"
+            f"Google Maps: https://www.google.com/maps?q={latitude},{longitude}\n\n"
+        )
+    else:
+        body += f"Last known location: {location_link}\n\n"
+
+    body += "Please respond immediately and check on the user.\n"
+
+    subject = "🚨 Silent Sentinel Emergency Alert"
     msg = MIMEText(body)
     msg['Subject'] = subject
     msg['From'] = sender_email
@@ -45,5 +58,6 @@ def send_email_alert(location_link="Location unavailable"):
 if __name__ == '__main__':
     # This block allows you to test the email functionality directly
     print("Testing email alert...")
-    test_link = "https://www.google.com/maps?q=12.9716,77.5946"
-    send_email_alert(test_link) 
+    test_lat = "12.9716"
+    test_lon = "77.5946"
+    send_email_alert(latitude=test_lat, longitude=test_lon)
